@@ -1,0 +1,29 @@
+package av3questao3;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.Socket;
+
+public class SensoresClientHandler implements Runnable {
+
+    private Socket clientSocket;
+
+    public SensoresClientHandler(Socket clientSocket) {
+        this.clientSocket = clientSocket;
+    }
+
+    @Override
+    public void run() {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()))) {
+            String sensorData;
+            while ((sensorData = reader.readLine()) != null) {
+                System.out.println("Dados do sensor recebidos: " + sensorData);
+                // Aqui você pode adicionar lógica para análise dos dados recebidos
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+

@@ -1,0 +1,52 @@
+package av3;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
+
+public class Ecommerce{
+
+    public static void main(String[] args) {
+ 
+        Map<String, Double> items = new HashMap<>();
+        items.put("Item1", 10.50);
+        items.put("Item2", 20.75);
+
+        // URL do servidor de compra
+        String purchaseUrl = "https://belmondojr.dev/compra.php?";
+
+        try {
+         
+            StringBuilder urlWithParams = new StringBuilder(purchaseUrl);
+            for (Map.Entry<String, Double> entry : items.entrySet()) {
+                String itemName = URLEncoder.encode(entry.getKey(), StandardCharsets.UTF_8);
+                double amount = entry.getValue();
+                urlWithParams.append("&products[]=").append(itemName);
+                urlWithParams.append("&values[]=").append(amount);
+            }
+
+            URL url = new URL(urlWithParams.toString());
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+         
+            connection.setRequestMethod("GET");
+
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
+                String line;
+                StringBuilder response = new StringBuilder();
+                while ((line = reader.readLine()) != null) {
+                    response.append(line);
+                }
+                System.out.println("Resposta do servidor: " + response.toString());
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}

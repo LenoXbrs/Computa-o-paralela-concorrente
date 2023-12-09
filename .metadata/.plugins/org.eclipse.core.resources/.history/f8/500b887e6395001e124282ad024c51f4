@@ -1,0 +1,59 @@
+package av3;
+
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.BufferedReader;
+
+public class EnviaSensor {
+
+    public static void main(String[] args) {
+        // Mock dos dados do sensor
+        double temperature = 25.5;
+        
+        // URL do servidor
+        String serverUrl = "https://belmondojr.dev/comunicacao.php?&sensors[]=temperature";
+
+        try {
+            // Criar URL e abrir a conexão
+            URL url = new URL(serverUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+            // Configurar método de requisição e cabeçalhos
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-Type", "application/json");
+            connection.setDoOutput(true);
+
+            // Montar os dados a serem enviados
+            String postData = "{\"temperature\": " + temperature + "}";
+            byte[] postDataBytes = postData.getBytes(StandardCharsets.UTF_8);
+
+            // Obter OutputStream e escrever os dados
+            try (OutputStream os = connection.getOutputStream()) {
+                os.write(postDataBytes);
+            }
+
+            // Obter a resposta do servidor (opcional)
+            int responseCode = connection.getResponseCode();
+            System.out.println("Resposta do servidor: " + responseCode);
+
+            // Ler a resposta do servidor (opcional)
+            try (InputStream is = connection.getInputStream();
+                 InputStreamReader isr = new InputStreamReader(is, StandardCharsets.UTF_8);
+                 BufferedReader br = new BufferedReader(isr)) {
+
+                String response;
+                while ((response = br.readLine()) != null) {
+                    System.out.println(response);
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+

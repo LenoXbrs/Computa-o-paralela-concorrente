@@ -1,0 +1,25 @@
+package av3questao3;
+
+import java.io.OutputStream;
+import java.net.Socket;
+import java.nio.charset.StandardCharsets;
+
+public class Cliente {
+
+    public static void main(String[] args) {
+        String serverHost = "localhost";
+        int serverPort = 8086;
+
+        try (Socket socket = new Socket(serverHost, serverPort);
+             OutputStream outputStream = socket.getOutputStream()) {
+
+            String sensorData = "Temperatura: 25.5°C, Umidade: 50%";
+
+            outputStream.write(sensorData.getBytes(StandardCharsets.UTF_8));
+            System.out.println("Dados do sensor enviados com sucesso.");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}

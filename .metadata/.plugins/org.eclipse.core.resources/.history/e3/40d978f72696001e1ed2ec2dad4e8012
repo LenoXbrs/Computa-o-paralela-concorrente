@@ -1,0 +1,15 @@
+package av3questao2;
+
+public class Compra {
+    private String[] produtos;
+    private double[] quantidades;
+
+    public Compra(String[] produtos, double[] quantidades) {
+        this.produtos = produtos;
+        this.quantidades = quantidades;
+    }
+
+    // Métodos getters e setters, se necessário
+
+    // Outros métodos relacionados à compra, se necessário
+}

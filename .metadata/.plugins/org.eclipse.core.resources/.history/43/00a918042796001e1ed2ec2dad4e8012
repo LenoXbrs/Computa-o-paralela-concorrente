@@ -1,0 +1,76 @@
+package av3questao2;
+
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+
+public class Ecommerce {
+
+    public static void main(String[] args) {
+        String serverUrl = "https://belmondojr.dev/compra.php";
+
+        try {
+            // Dados simulados da compra
+            String[] produtos = {"Item1", "Item2"};
+            double[] quantidades = {10.50, 20.75};
+
+            // Criar objeto de compra
+            Compra compra = new Compra(produtos, quantidades);
+
+            // Enviar dados para o servidor
+            enviarCompra(serverUrl, compra);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void enviarCompra(String serverUrl, Compra compra) throws Exception {
+        // Criar URL e abrir a conexão
+        URL url = new URL(serverUrl);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+        // Configurar método de requisição e cabeçalhos
+        connection.setRequestMethod("POST");
+        connection.setRequestProperty("Content-Type", "application/json");
+        connection.setDoOutput(true);
+
+        // Montar os dados a serem enviados
+        String postData = criarJSONCompra(compra);
+        byte[] postDataBytes = postData.getBytes(StandardCharsets.UTF_8);
+
+        // Obter OutputStream e escrever os dados
+        try (OutputStream os = connection.getOutputStream()) {
+            os.write(postDataBytes);
+        }
+
+        // Obter a resposta do servidor (opcional)
+        int responseCode = connection.getResponseCode();
+        System.out.println("Resposta do servidor: " + responseCode);
+    }
+
+    private static String criarJSONCompra(Compra compra) {
+        // Lógica para converter o objeto de compra para formato JSON
+        // Aqui, você pode usar uma biblioteca como Gson ou manualmente criar uma string JSON
+        // Exemplo simples sem bibliotecas externas:
+        StringBuilder jsonBuilder = new StringBuilder("{");
+        jsonBuilder.append("\"produtos\": [");
+        for (int i = 0; i < compra.getProdutos().length; i++) {
+            jsonBuilder.append("\"").append(compra.getProdutos()[i]).append("\"");
+            if (i < compra.getProdutos().length - 1) {
+                jsonBuilder.append(",");
+            }
+        }
+        jsonBuilder.append("], \"quantidades\": [");
+        for (int i = 0; i < compra.getQuantidades().length; i++) {
+            jsonBuilder.append(compra.getQuantidades()[i]);
+            if (i < compra.getQuantidades().length - 1) {
+                jsonBuilder.append(",");
+            }
+        }
+        jsonBuilder.append("]}");
+        return jsonBuilder.toString();
+    }
+}
+

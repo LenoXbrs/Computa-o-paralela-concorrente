@@ -1,0 +1,27 @@
+package av3questao3;
+
+import java.io.OutputStream;
+import java.net.Socket;
+import java.nio.charset.StandardCharsets;
+
+public class SensorDataSender {
+
+    public static void main(String[] args) {
+        String serverHost = "localhost";
+        int serverPort = 8083;
+
+        try (Socket socket = new Socket(serverHost, serverPort);
+             OutputStream outputStream = socket.getOutputStream()) {
+
+            // Dados simulados do sensor
+            String sensorData = "Temperatura: 25.5°C, Umidade: 50%";
+
+            // Enviar dados para o servidor
+            outputStream.write(sensorData.getBytes(StandardCharsets.UTF_8));
+            System.out.println("Dados do sensor enviados com sucesso.");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}

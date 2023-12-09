@@ -1,0 +1,48 @@
+package av3questao2;
+
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+public class Ecommerce {
+
+
+
+	    public static void main(String[] args) {
+	        String serverUrl = "https://belmondojr.dev/compra.php";
+
+	        try {
+	            // Dados simulados da compra
+	            String[] produtos = {"Item1", "Item2"};
+	            double[] quantidades = {10.50, 20.75};
+
+	            // Enviar dados para o servidor
+	            enviarCompra(serverUrl, produtos, quantidades);
+
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	    }
+
+	    private static void enviarCompra(String serverUrl, String[] produtos, double[] quantidades) throws Exception {
+	        // Construir a URL com os parâmetros da compra
+	        StringBuilder urlWithParams = new StringBuilder(serverUrl);
+	        for (int i = 0; i < produtos.length; i++) {
+	            urlWithParams.append("&products[]=").append(produtos[i]);
+	            urlWithParams.append("&amounts[]=").append(quantidades[i]);
+	        }
+
+	        // Criar URL e abrir a conexão
+	        URL url = new URL(urlWithParams.toString());
+	        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+	        // Configurar método de requisição e cabeçalhos
+	        connection.setRequestMethod("GET");
+
+	        // Obter a resposta do servidor (opcional)
+	        int responseCode = connection.getResponseCode();
+	        System.out.println("Resposta do servidor: " + responseCode);
+	    }
+	
+
+}
+
